@@ -1,0 +1,55 @@
+input {
+    background-color: rgba($color: #ffffff, $alpha: 0.1);
+    font-size: 16px;
+    padding: 8px;
+    border-radius: 6px;
+    margin-top: 8px;
+    color: $mediumfontColor;
+    border: solid 2px rgba($color: #000000, $alpha: 0.3);
+    outline: none;
+    font-weight: 200;
+    transition: all 225ms ease-out;
+    &::placeholder {
+        opacity: 0.5;
+        color: $mediumfontColor;
+    }
+    &:focus-visible {
+        outline: none;
+        border: solid 2px rgba($color: #000000, $alpha: 0.6) !important;
+    }
+    &:focus {
+        transition: all 225ms ease-out;
+        outline: none;
+        border: solid 2px rgba($color: #000000, $alpha: 0.6) !important;
+    }
+}
+
+input[type="submit"] {
+    font-weight: bold;
+    letter-spacing: 1px;
+    transition: all 225ms ease-out;
+    background-color: $orange;
+    color: white;
+    &:hover {
+        cursor: pointer;
+        background-color: lighten($color: $orange, $amount: 5);
+        transition: all 225ms ease-out
+    }
+    &:active {
+        background-color: darken($color: $orange, $amount: 5);
+        transition: all 225ms ease-out;
+    }
+}
+
+input.form-error {
+    border: 1px solid crimson !important;
+}
+
+label.info {
+    font-weight: 200;
+    font-size: 14px;
+}
+
+label {
+    font-size: 16px;
+}

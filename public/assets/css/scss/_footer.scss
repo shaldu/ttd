@@ -1,0 +1,11 @@
+.footer-content {
+    background-color: $darkBlue;
+    height: $footerheight;
+    position: fixed;
+    bottom: 0;
+    color: $white;
+    p {
+        margin-bottom: 0px;
+        font-size: 12px;
+    }
+}

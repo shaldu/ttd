@@ -1,0 +1,33 @@
+$darkBlue: #0C1821;
+$green: #4E6E5D;
+$white: #FCFCFC;
+$red: #DA2C38;
+$lightPurple: #78586F;
+$footerheight: 40px;
+$mediumfontColor: #cccccc;
+$orange: rgb(78, 136, 243);
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+label,
+span,
+lead,
+strong {
+    color: $mediumfontColor;
+}
+
+input {
+    border: 1px solid darken($color: $darkBlue, $amount: 10);
+    color: $mediumfontColor;
+    &:focus {
+        border: 1px solid lighten($color: $darkBlue, $amount: 10);
+    }
+}
+
+$mobile: 768px;
+$tablet: 992px;
+$desktop: 1200px;
