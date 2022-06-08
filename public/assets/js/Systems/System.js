@@ -109,7 +109,7 @@ export class BurningSystem extends System {
 
     init() {
         this.timerCount = 0;
-        this.tickRate = 0.01;
+        this.tickRate = 0.25;
         this.queries.burning.results.forEach(entity => {
             const burning = entity.getMutableComponent(Burning);
             burning.currentBurnTime = 0;

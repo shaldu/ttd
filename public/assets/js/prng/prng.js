@@ -7,10 +7,12 @@ export default class PRNG {
     }
 
     getRandomFloat() {
-        return Math.sin(this.hseed++);
+        this.hseed++;
+        return Math.sin(this.hseed);
     }
 
     random() {
+        this.hseed++;
         return Math.sin(this.hseed++);
     }
 
@@ -23,12 +25,12 @@ export default class PRNG {
         return this.getRandomFloat() < (weight / 100);
     }
 
-    randomInRange(min = -999999, max = 999999) {
+    randomInRange(min = -9999999, max = 9999999) {
 
         return this.getRandomFloat() * (max - min + 1) + min;
     }
 
-    getRandomInt(min = -999999, max = 999999) {
+    getRandomInt(min = -9999999, max = 9999999) {
         min = Math.ceil(min);
         max = Math.floor(max);
         return Math.floor(this.getRandomFloat() * (max - min + 1)) + min;

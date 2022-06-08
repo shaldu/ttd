@@ -29,7 +29,7 @@ if (!socket.connected) {
 
 //init all variables
 let scene, camera, renderer, deltaTime, controls, clock, prng, stats, stopRender = false,
-    composer, world, map, seed = "2sn22221111wasddan";
+    composer, world, map, seed = 222221;
 
 const postprocessingValues = {
     exposure: 1,
@@ -121,7 +121,7 @@ function initWorld() {
 
     let texture = new THREE.TextureLoader().load("/assets/sprites/tileset.png");
 
-    map = new Map(scene, world, 65536, texture, 310, 350, 10, 10, seed, prng);
+    map = new Map(scene, world, 4096, texture, 310, 350, 10, 10, seed, prng);
 
     // world
     //         .createEntity()
@@ -156,6 +156,7 @@ function animate() {
 //on key press 1
 document.addEventListener('keydown', (event) => {
     if (event.keyCode === 49) {
+        console.log(prng.getRandomInt(0, map.tiles.length));
         let tile = map.tiles[prng.getRandomInt(0, map.tiles.length)]
         if (tile) {
             tile.burn();

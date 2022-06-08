@@ -6,6 +6,7 @@ import { InstancedUniformsMesh } from '/three-instanced-uniforms-mesh/dist/three
 import fragmentShader from './shaders/fragmentShader.glsl.js';
 import vertexShader from './shaders/vertexShader.glsl.js';
 import { GrassTile, TreeTile, WaterTile, SandTile } from './Tile.js';
+
 export default class Map {
 
     constructor(scene, world, size, texture, textureWidth, textureHeight, tileWidth, tileHeight, seed, prng) {
@@ -22,7 +23,6 @@ export default class Map {
         this.tileHeight = tileHeight;
         this.meshLayerMain;
         this.meshLayerSecond;
-
         this.createTiles();
 
         for (let index = 0; index < 5; index++) {
@@ -67,7 +67,7 @@ export default class Map {
                 let value2d4 = (Math.floor(this.simplex.noise2D(x * 0.09, y * 0.08) * 100)) / 20;
 
                 let value = (value2d + value2d2 - ((value2d3 * value2d4) / 2)) / 3;
-                let waterlevel = 5.2;
+                let waterlevel = 2.2;
                 let treeAmount = .1;
                 value = value + waterlevel;
 
@@ -449,4 +449,6 @@ export default class Map {
             this.meshLayerSecond.setUniformAt('opacity', matrixId, opacity2);
         }
     }
+
+
 }
