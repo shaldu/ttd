@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { InstancedUniformsMesh } from '/three-instanced-uniforms-mesh/dist/three-instanced-uniforms-mesh.esm.js';
 import fragmentShader from './shaders/fragmentShader.glsl.js';
 import vertexShader from './shaders/vertexShader.glsl.js';
+
 import { GrassTile, TreeTile, WaterTile, SandTile } from './Tile.js';
 
 export default class Map {
@@ -49,7 +50,14 @@ export default class Map {
         this.createMapSecondLayer();
     }
 
+    getTileFromTilePosition(x, y) {
+        let sizeSqr = Math.sqrt(this.size);
+        let id = (y + x * sizeSqr);
+        return this.tiles[id];
+    }
+
     createTiles() {
+
         let sizeSqr = Math.sqrt(this.size)
         let iterator = 0;
 
@@ -367,7 +375,8 @@ export default class Map {
 
                 this.meshLayerMain.setUniformAt('opacity', tile.matrixId, 1);
                 this.meshLayerMain.setUniformAt('texOffset', tile.matrixId, new THREE.Vector2(offsetX, offsetY))
-                this.meshLayerMain.setUniformAt('vPosition', tile.matrixId, new THREE.Vector4(x, y, 0, 0))
+
+                this.meshLayerMain.setUniformAt('vPosition', tile.matrixId, new THREE.Vector4(x + .5, y + .5, 0, 0))
             }
         });
 

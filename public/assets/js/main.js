@@ -13,6 +13,7 @@ import Background from './Background.js';
 
 import { Acceleration, Position, Sprite, Burning } from './Components/Components.js';
 import { MovableSystem, SpriteSystem, BurningSystem } from './Systems/System.js';
+import { LogLuvEncoding } from 'three';
 
 
 const socket = io({ transports: ['websocket'], upgrade: false, autoConnect: true, reconnection: false });
@@ -29,7 +30,7 @@ if (!socket.connected) {
 
 //init all variables
 let scene, camera, renderer, deltaTime, controls, clock, prng, stats, stopRender = false,
-    composer, world, map, seed = 222221;
+    composer, world, map, seed = 2926662221;
 
 const postprocessingValues = {
     exposure: 1,
@@ -77,6 +78,7 @@ function initThree() {
     //set control position and look at
     camera.position.set(0, 0, 20);
     camera.lookAt(0, 0, 0);
+    controls.object.position.set(0, 0, 20);
     controls.update();
 
     stats = Stats()
@@ -121,7 +123,7 @@ function initWorld() {
 
     let texture = new THREE.TextureLoader().load("/assets/sprites/tileset.png");
 
-    map = new Map(scene, world, 4096, texture, 310, 350, 10, 10, seed, prng);
+    map = new Map(scene, world, 16384, texture, 310, 350, 10, 10, seed, prng);
 
     // world
     //         .createEntity()
@@ -163,6 +165,33 @@ document.addEventListener('keydown', (event) => {
         }
     }
 });
+
+//mouse move 
+document.addEventListener('mousemove', (event) => {
+    //mouse to world position
+    let mouse = new Vector2(event.clientX, event.clientY);
+    let TileToPixelRatio = 25;
+    let zoom = controls.object.zoom
+    let playerPosition = controls.object.position;
+
+    //set mouse position to center of screen
+    mouse.x = (mouse.x - (window.innerWidth / 2)) / zoom;
+    mouse.y = ((window.innerHeight / 2) - mouse.y) / zoom;
+
+
+    //convert mouse position to tile position
+    let tileX = Math.floor(mouse.x / TileToPixelRatio) + Math.floor(playerPosition.x);
+    let tileY = Math.floor(mouse.y / TileToPixelRatio) + Math.floor(playerPosition.y);
+
+    //get tile
+    let tile = map.getTileFromTilePosition(tileX, tileY);
+    if (tile) {
+        map.changeTile(tile.matrixId, null, null, 0.2);
+    }
+
+});
+
+
 
 initThree();
 initWorld();
