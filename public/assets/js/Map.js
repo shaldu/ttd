@@ -424,7 +424,7 @@ export default class Map {
 
                 this.meshLayerSecond.setUniformAt('opacity', tile.matrixId, 1);
                 this.meshLayerSecond.setUniformAt('texOffset', tile.matrixId, new THREE.Vector2(offsetX, offsetY))
-                this.meshLayerMain.setUniformAt('vPosition', tile.matrixId, new THREE.Vector4(x + .5, y + .5, 0, 0))
+                this.meshLayerSecond.setUniformAt('vPosition', tile.matrixId, new THREE.Vector4(x + .5, y + .5, 0, 0))
             }
         });
 

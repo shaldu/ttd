@@ -29,7 +29,7 @@ if (!socket.connected) {
 }
 
 //init all variables
-let scene, camera, renderer, deltaTime, controls, clock, prng, stats, mouse = new Vector2(0,0), stopRender = false,
+let scene, camera, renderer, deltaTime, controls, clock, prng, stats, mouseTileCords = new Vector2(0, 0), stopRender = false, selectedTile, selectedTileOld,
     composer, world, map, seed = 2926662221;
 
 const postprocessingValues = {
@@ -146,7 +146,8 @@ function animate() {
         requestAnimationFrame(animate);
     }
 
-    
+    selectHoveredTile();
+
     deltaTime = clock.getDelta();
 
     world.execute(deltaTime, 0);
@@ -167,8 +168,20 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
+function selectHoveredTile() {
+    if (mouseTileCords.x < 0 || mouseTileCords.y < 0 || mouseTileCords.x > map.tiles.length || mouseTileCords.y > map.tiles[0].length){
+        document.querySelector('.selectStatusWindow').classList.remove('show');
+        return;
+    };
+    selectedTile = map.getTileFromTilePosition(mouseTileCords.x, mouseTileCords.y);
+    if (selectedTile) {
+        selectedTile.showTileInfoField();
+    }
+}
+
 //get mouse position to vector2 
 document.addEventListener('mousemove', (event) => {
+    let mouse = new Vector2(0, 0);
     let TileToPixelRatio = 25;
     let zoom = controls.object.zoom
     let playerPosition = camera.position;
@@ -177,16 +190,12 @@ document.addEventListener('mousemove', (event) => {
     mouse.x = (event.clientX - (window.innerWidth / 2)) / zoom;
     mouse.y = ((window.innerHeight / 2) - event.clientY) / zoom;
 
-
     //convert mouse position to tile position
     let tileX = Math.floor((mouse.x) / TileToPixelRatio);
     let tileY = Math.floor((mouse.y) / TileToPixelRatio);
+    mouseTileCords.x = tileX + Math.floor(playerPosition.x + .5);
+    mouseTileCords.y = tileY + Math.floor(playerPosition.y + .5);
 
-    //get tile
-    let tile = map.getTileFromTilePosition(tileX + Math.floor(playerPosition.x + .5), tileY + Math.floor(playerPosition.y + .5));
-    if (tile) {
-        map.changeTile(tile.matrixId, null, null, 0.2);
-    }
 });
 
 

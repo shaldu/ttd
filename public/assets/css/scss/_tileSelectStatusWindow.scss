@@ -1,0 +1,39 @@
+.selectStatusWindow {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    width: 150px;
+    height: 100px;
+    padding: 5px;
+    border-radius: 3px;
+    border: solid 1px rgb(36, 18, 65);
+    background-color: rgb(87, 56, 138);
+    opacity: 0.8;
+
+    display: none;
+
+    &.show {
+        display: block;
+    }
+
+    p {
+        font-size: 12px;
+        font-style: italic;
+        color: white;
+        margin-bottom: 3px;
+    }
+
+    .tile-name {
+
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .status-label {
+        margin-top: 2px;
+    }
+
+    .status-value {
+        margin-top: 2px;
+    }
+}

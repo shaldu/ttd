@@ -17,7 +17,6 @@ input {
   border: 1px solid black;
   color: #cccccc;
 }
-
 input:focus {
   border: 1px solid #1a3346;
 }
@@ -62,7 +61,6 @@ body {
   bottom: 0;
   color: #FCFCFC;
 }
-
 .footer-content p {
   margin-bottom: 0px;
   font-size: 12px;
@@ -78,61 +76,44 @@ input {
   border: solid 2px rgba(0, 0, 0, 0.3);
   outline: none;
   font-weight: 200;
-  -webkit-transition: all 225ms ease-out;
   transition: all 225ms ease-out;
 }
-
-input::-webkit-input-placeholder {
+input::-moz-placeholder {
   opacity: 0.5;
   color: #cccccc;
 }
-
 input:-ms-input-placeholder {
   opacity: 0.5;
   color: #cccccc;
 }
-
-input::-ms-input-placeholder {
-  opacity: 0.5;
-  color: #cccccc;
-}
-
 input::placeholder {
   opacity: 0.5;
   color: #cccccc;
 }
-
 input:focus-visible {
   outline: none;
   border: solid 2px rgba(0, 0, 0, 0.6) !important;
 }
-
 input:focus {
-  -webkit-transition: all 225ms ease-out;
   transition: all 225ms ease-out;
   outline: none;
   border: solid 2px rgba(0, 0, 0, 0.6) !important;
 }
 
-input[type="submit"] {
+input[type=submit] {
   font-weight: bold;
   letter-spacing: 1px;
-  -webkit-transition: all 225ms ease-out;
   transition: all 225ms ease-out;
-  background-color: #4e88f3;
+  background-color: rgb(78, 136, 243);
   color: white;
 }
-
-input[type="submit"]:hover {
+input[type=submit]:hover {
   cursor: pointer;
   background-color: #6698f5;
-  -webkit-transition: all 225ms ease-out;
   transition: all 225ms ease-out;
 }
-
-input[type="submit"]:active {
+input[type=submit]:active {
   background-color: #3678f1;
-  -webkit-transition: all 225ms ease-out;
   transition: all 225ms ease-out;
 }
 
@@ -148,4 +129,36 @@ label.info {
 label {
   font-size: 16px;
 }
-/*# sourceMappingURL=styles.css.map */
+
+.selectStatusWindow {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 150px;
+  height: 100px;
+  padding: 5px;
+  border-radius: 3px;
+  border: solid 1px rgb(36, 18, 65);
+  background-color: rgb(87, 56, 138);
+  opacity: 0.8;
+  display: none;
+}
+.selectStatusWindow.show {
+  display: block;
+}
+.selectStatusWindow p {
+  font-size: 12px;
+  font-style: italic;
+  color: white;
+  margin-bottom: 3px;
+}
+.selectStatusWindow .tile-name {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+.selectStatusWindow .status-label {
+  margin-top: 2px;
+}
+.selectStatusWindow .status-value {
+  margin-top: 2px;
+}/*# sourceMappingURL=styles.css.map */

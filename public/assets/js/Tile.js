@@ -30,6 +30,21 @@ class Tile {
         this.burnedTextureOffset = this.textureOffset;
     }
 
+    showTileInfoField() {
+        let baseElm = document.querySelector('.selectStatusWindow');
+        let titleElm = baseElm.querySelector('.tile-name');
+        let titleDescription = baseElm.querySelector('.tile-description');
+        let statusElm = baseElm.querySelector('.status-value');
+        baseElm.classList.add('show');
+        titleElm.innerHTML = this.name;
+        titleDescription.innerHTML = this.description;
+        if (this.isBurning) {
+            statusElm.innerHTML = "burning";
+        } else {
+            statusElm.innerHTML = "";
+        }
+    }
+
     burn() {
         if (this.canBurn) {
             if (!this.isBurning) {
