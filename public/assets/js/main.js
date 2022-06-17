@@ -29,7 +29,7 @@ if (!socket.connected) {
 }
 
 //init all variables
-let scene, camera, renderer, deltaTime, controls, clock, prng, stats, stopRender = false,
+let scene, camera, renderer, deltaTime, controls, clock, prng, stats, mouse = new Vector2(0,0), stopRender = false,
     composer, world, map, seed = 2926662221;
 
 const postprocessingValues = {
@@ -76,16 +76,16 @@ function initThree() {
     clock.start();
 
     //set control position and look at
-    camera.position.set(0, 0, 20);
+    camera.position.set(0, .00001, 20);
     camera.lookAt(0, 0, 0);
-    controls.object.position.set(0, 0, 20);
+
+    camera.position.set(0, .00001, 20);
     controls.update();
 
     stats = Stats()
     document.body.appendChild(stats.dom)
 
     prng = new PRNG(seed);
-
 
     addGUI(bloomPass);
 
@@ -94,19 +94,19 @@ function initThree() {
 function addGUI(bloomPass) {
     const gui = new GUI();
 
-    gui.add(postprocessingValues, 'bloomThreshold', 0.0, 1.0).onChange(function(value) {
+    gui.add(postprocessingValues, 'bloomThreshold', 0.0, 1.0).onChange(function (value) {
 
         bloomPass.threshold = Number(value);
 
     });
 
-    gui.add(postprocessingValues, 'bloomStrength', 0.0, 3.0).onChange(function(value) {
+    gui.add(postprocessingValues, 'bloomStrength', 0.0, 3.0).onChange(function (value) {
 
         bloomPass.strength = Number(value);
 
     });
 
-    gui.add(postprocessingValues, 'bloomRadius', 0.0, 1.0).step(0.01).onChange(function(value) {
+    gui.add(postprocessingValues, 'bloomRadius', 0.0, 1.0).step(0.01).onChange(function (value) {
 
         bloomPass.radius = Number(value);
 
@@ -146,13 +146,14 @@ function animate() {
         requestAnimationFrame(animate);
     }
 
-    controls.update();
+    
     deltaTime = clock.getDelta();
 
     world.execute(deltaTime, 0);
     renderer.render(scene, camera);
     stats.update()
     composer.render();
+    controls.update();
 }
 
 //on key press 1
@@ -166,31 +167,27 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
-//mouse move 
+//get mouse position to vector2 
 document.addEventListener('mousemove', (event) => {
-    //mouse to world position
-    let mouse = new Vector2(event.clientX, event.clientY);
     let TileToPixelRatio = 25;
     let zoom = controls.object.zoom
-    let playerPosition = controls.object.position;
+    let playerPosition = camera.position;
 
     //set mouse position to center of screen
-    mouse.x = (mouse.x - (window.innerWidth / 2)) / zoom;
-    mouse.y = ((window.innerHeight / 2) - mouse.y) / zoom;
+    mouse.x = (event.clientX - (window.innerWidth / 2)) / zoom;
+    mouse.y = ((window.innerHeight / 2) - event.clientY) / zoom;
 
 
     //convert mouse position to tile position
-    let tileX = Math.floor(mouse.x / TileToPixelRatio) + Math.floor(playerPosition.x);
-    let tileY = Math.floor(mouse.y / TileToPixelRatio) + Math.floor(playerPosition.y);
+    let tileX = Math.floor((mouse.x) / TileToPixelRatio);
+    let tileY = Math.floor((mouse.y) / TileToPixelRatio);
 
     //get tile
-    let tile = map.getTileFromTilePosition(tileX, tileY);
+    let tile = map.getTileFromTilePosition(tileX + Math.floor(playerPosition.x + .5), tileY + Math.floor(playerPosition.y + .5));
     if (tile) {
         map.changeTile(tile.matrixId, null, null, 0.2);
     }
-
 });
-
 
 
 initThree();
