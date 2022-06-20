@@ -431,8 +431,13 @@ export default class Map {
         this.scene.add(this.meshLayerSecond);
     }
 
+    changeTile(matrixId, newTile) {
+        this.tiles[matrixId] = newTile;
+        this.tiles[matrixId].initTextureChange();
+    }
+
     //change Tiles
-    changeTile(matrixId, textureOffset = null, textureOffset2 = null, opacity1 = null, opacity2 = null) {
+    changeTileTexture(matrixId, textureOffset = null, textureOffset2 = null, opacity1 = null, opacity2 = null) {
 
         if (textureOffset) {
             let offSetId = textureOffset;

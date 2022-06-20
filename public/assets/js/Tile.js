@@ -1,4 +1,5 @@
 import Map from './Map.js';
+import { EntityInfo } from './EntityInfo.js';
 import { Burning } from './Components/Components.js';
 
 class Tile {
@@ -15,6 +16,8 @@ class Tile {
         this.state = null;
         this.map = map;
 
+        this.entityInfo = new EntityInfo(this);
+
         //can be damaged
         this.canBeDamaged = false;
         this.health = 100;
@@ -30,39 +33,32 @@ class Tile {
         this.burnedTextureOffset = this.textureOffset;
     }
 
-    showTileInfoField() {
-        let baseElm = document.querySelector('.selectStatusWindow');
-        let titleElm = baseElm.querySelector('.tile-name');
-        let titleDescription = baseElm.querySelector('.tile-description');
-        let statusElm = baseElm.querySelector('.status-value');
-        baseElm.classList.add('show');
-        titleElm.innerHTML = this.name;
-        titleDescription.innerHTML = this.description;
-        if (this.isBurning) {
-            statusElm.innerHTML = "burning";
-        } else {
-            statusElm.innerHTML = "";
-        }
+    initTextureChange() {
+        this.map.changeTileTexture(this.matrixId, this.textureOffset, this.textureOffset2, 1, 1);
     }
 
     burn() {
         if (this.canBurn) {
             if (!this.isBurning) {
-                this.map.changeTile(this.matrixId, null, { x: 0, y: 12 }, 0.75, 1);
+                this.map.changeTileTexture(this.matrixId, this.burnedTextureOffset, { x: 0, y: 12 }, 0.75, 1);
                 this.state = "burning";
                 this.isBurning = true;
                 this.burnEntity = this.world
                     .createEntity()
-                    .addComponent(Burning, { tile: this, "maxBurnTime": this.maxBurnTime, "burnDamage": this.burnDamage })
+                    .addComponent(Burning, { entity: this, "maxBurnTime": this.maxBurnTime, "burnDamage": this.burnDamage })
             }
         }
     }
 
     stopBurn() {
-        this.map.changeTile(this.matrixId, this.burnedTextureOffset, { x: 2, y: 12 }, 1, 1);
         this.canBurn = false;
         this.isBurning = false;
+        this.map.changeTileTexture(this.matrixId, this.burnedTextureOffset, { x: 0, y: 12 }, 1, 0);
         this.burnEntity.remove();
+    }
+
+    burnedOut() {
+        this.map.changeTile(this.matrixId, new AshTile(this.matrixId, this.x, this.y, 11, this.world, this.map, { "x": 2, "y": 4 }, this.textureOffset2));
     }
 }
 
@@ -74,14 +70,15 @@ export class GrassTile extends Tile {
         this.description = "Lush green grass, gatherable";
 
         this.canBeDamaged = true;
-        this.health = 20;
-        this.maxHealth = 20;
+        this.health = 25;
+        this.maxHealth = 25;
 
         this.canBurn = true;
         this.isBurning = false;
         this.currentBurnTime = 0;
         this.maxBurnTime = 10;
-        this.burnDamage = 5;
+        this.burnDamage = 4;
+        this.spreadChancePercantage = 75;
         this.burnedTextureOffset = { x: 26, y: 10 };
     }
 
@@ -115,6 +112,7 @@ export class TreeTile extends Tile {
         this.currentBurnTime = 0;
         this.maxBurnTime = 20;
         this.burnDamage = 10;
+        this.spreadChancePercantage = 75;
         this.burnedTextureOffset = { x: 29, y: 13 };
     }
 
@@ -127,6 +125,18 @@ export class SandTile extends Tile {
 
         this.name = "Sand";
         this.description = "Sand, gatherable";
+    }
+
+}
+
+
+
+export class AshTile extends Tile {
+    constructor(matrixId, x, y, typeId, world, map, textureOffset = { x: 30, y: 28 }, textureOffset2 = { x: 30, y: 28 }) {
+        super(matrixId, x, y, typeId, world, map, textureOffset, textureOffset2);
+
+        this.name = "Ash";
+        this.description = "Ash, gatherable";
     }
 
 }

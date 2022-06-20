@@ -45,6 +45,7 @@ Burning.schema = {
     isBurning: { type: Types.Boolean, default: false },
     currentBurnTime: { type: Types.Number, default: 0 },
     maxBurnTime: { type: Types.Number, default: 20 },
-    burnDamage: { type: Types.Number, default: 10 },
-    tile: { type: Types.Ref }
+    burnDamage: { type: Types.Number, default: 5 },
+    spreadChancePercantage: { type: Types.Number, default: 50 },
+    entity: { type: Types.Ref }
 };

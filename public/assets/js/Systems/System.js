@@ -123,21 +123,31 @@ export class BurningSystem extends System {
             this.queries.burning.results.forEach(entity => {
                 let burning = entity.getMutableComponent(Burning);
                 burning.currentBurnTime = burning.currentBurnTime + delta + this.tickRate;
-                this.spreadBurn(burning.tile);
-                if (burning.currentBurnTime > burning.maxBurnTime) {
+                this.updateHealthValue(burning);
+                this.spreadBurn(burning.entity);
+                if (burning.currentBurnTime > burning.maxBurnTime || burning.entity.health <= 0) {
                     burning.isBurning = false;
                     burning.currentBurnTime = 0;
-                    burning.tile.stopBurn();
+                    burning.entity.stopBurn();
+                    if (burning.entity.health <= 0) {
+                        burning.entity.burnedOut();
+                    }
                 }
             });
         }
     }
 
-    spreadBurn(tile) {
-        let neighbours = tile.map.getTileNeighbours(tile);
+    updateHealthValue(burning) {
+        //if less than 0 then set to 0
+        burning.entity.health = burning.entity.health - burning.burnDamage < 0 ? 0 : burning.entity.health - burning.burnDamage;
+    }
+
+    spreadBurn(entity) {
+        let neighbours = entity.map.getTileNeighbours(entity);
+        let spreadChance = entity.spreadChancePercantage;
         //get random neighbour
-        let randomNeighbour = neighbours[Math.floor(tile.map.prng.getRandomFloat() * neighbours.length)];
-        if (tile.map.prng.getRandomBool()) {
+        let randomNeighbour = neighbours[Math.floor(entity.map.prng.getRandomFloat() * neighbours.length)];
+        if (entity.map.prng.getRandomBoolWithWeightPercentage(spreadChance)) {
             if (randomNeighbour !== undefined) {
                 randomNeighbour.burn();
             }

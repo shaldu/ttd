@@ -29,8 +29,8 @@ if (!socket.connected) {
 }
 
 //init all variables
-let scene, camera, renderer, deltaTime, controls, clock, prng, stats, mouseTileCords = new Vector2(0, 0), stopRender = false, selectedTile, selectedTileOld,
-    composer, world, map, seed = 2926662221;
+let scene, camera, renderer, deltaTime, controls, clock, prng, stats, slowTimer = 0, mouseTileCords = new Vector2(0, 0), stopRender = false, selectedTile, selectedTileOld,
+    composer, world, map, seed = 6222;
 
 const postprocessingValues = {
     exposure: 1,
@@ -123,11 +123,7 @@ function initWorld() {
 
     let texture = new THREE.TextureLoader().load("/assets/sprites/tileset.png");
 
-    map = new Map(scene, world, 16384, texture, 310, 350, 10, 10, seed, prng);
-
-    // world
-    //         .createEntity()
-    //         .addComponent(Position, new Vector3(x, y, 0))
+    map = new Map(scene, world, 360000, texture, 310, 350, 10, 10, seed, prng);
 
     world
         .registerSystem(MovableSystem)
@@ -146,7 +142,13 @@ function animate() {
         requestAnimationFrame(animate);
     }
 
-    selectHoveredTile();
+   
+    if (slowTimer > 0.1) {
+        slowTimer = 0;
+        selectHoveredTile();
+    }
+    slowTimer += clock.getDelta();
+    
 
     deltaTime = clock.getDelta();
 
@@ -159,7 +161,7 @@ function animate() {
 
 //on key press 1
 document.addEventListener('keydown', (event) => {
-    if (event.keyCode === 49) {
+    if (event.keyCode === 50) {
         console.log(prng.getRandomInt(0, map.tiles.length));
         let tile = map.tiles[prng.getRandomInt(0, map.tiles.length)]
         if (tile) {
@@ -175,7 +177,7 @@ function selectHoveredTile() {
     };
     selectedTile = map.getTileFromTilePosition(mouseTileCords.x, mouseTileCords.y);
     if (selectedTile) {
-        selectedTile.showTileInfoField();
+        selectedTile.entityInfo.showTileInfoField();
     }
 }
 
@@ -197,6 +199,13 @@ document.addEventListener('mousemove', (event) => {
     mouseTileCords.y = tileY + Math.floor(playerPosition.y + .5);
 
 });
+
+//on key press 1
+document.addEventListener('keydown', (event) => {
+    if (event.keyCode === 49) {
+        selectedTile.burn();
+    }
+})
 
 
 initThree();
