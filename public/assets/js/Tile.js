@@ -30,6 +30,7 @@ class Tile {
         this.currentBurnTime = 0;
         this.maxBurnTime = 20;
         this.burnDamage = 10;
+        this.burnResistance = 1;
         this.burnedTextureOffset = this.textureOffset;
     }
 
@@ -45,7 +46,7 @@ class Tile {
                 this.isBurning = true;
                 this.burnEntity = this.world
                     .createEntity()
-                    .addComponent(Burning, { entity: this, "maxBurnTime": this.maxBurnTime, "burnDamage": this.burnDamage })
+                    .addComponent(Burning, { entity: this, "maxBurnTime": this.maxBurnTime, "burnDamage": this.burnDamage, "burnResistance": this.burnResistance });
             }
         }
     }
@@ -76,8 +77,9 @@ export class GrassTile extends Tile {
         this.canBurn = true;
         this.isBurning = false;
         this.currentBurnTime = 0;
-        this.maxBurnTime = 10;
-        this.burnDamage = 4;
+        this.maxBurnTime = 8;
+        this.burnDamage = 3;
+        this.burnResistance = this.map.prng.getRandomInt(1,2);
         this.spreadChancePercantage = 75;
         this.burnedTextureOffset = { x: 26, y: 10 };
     }
@@ -110,8 +112,9 @@ export class TreeTile extends Tile {
         this.canBurn = true;
         this.isBurning = false;
         this.currentBurnTime = 0;
-        this.maxBurnTime = 20;
+        this.maxBurnTime = 10;
         this.burnDamage = 10;
+        this.burnResistance = this.map.prng.getRandomInt(1,3);
         this.spreadChancePercantage = 75;
         this.burnedTextureOffset = { x: 29, y: 13 };
     }

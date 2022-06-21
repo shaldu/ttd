@@ -1,6 +1,7 @@
 import { System } from 'ecsy';
 import { Position, Acceleration, Sprite, Burning } from './../Components/Components.js';
 import * as THREE from 'three'
+import { Helpers } from '../Helpers.js';
 
 export class MovableSystem extends System {
     init() {
@@ -138,15 +139,15 @@ export class BurningSystem extends System {
     }
 
     updateHealthValue(burning) {
-        //if less than 0 then set to 0
-        burning.entity.health = burning.entity.health - burning.burnDamage < 0 ? 0 : burning.entity.health - burning.burnDamage;
+        let damage = Math.floor(Helpers.clamp((burning.burnDamage / (burning.burnResistance)),0, 99999));
+        burning.entity.health = Helpers.clamp((burning.entity.health - damage),0 , burning.entity.maxHealth);
     }
 
     spreadBurn(entity) {
         let neighbours = entity.map.getTileNeighbours(entity);
         let spreadChance = entity.spreadChancePercantage;
         //get random neighbour
-        let randomNeighbour = neighbours[Math.floor(entity.map.prng.getRandomFloat() * neighbours.length)];
+        let randomNeighbour = neighbours[Math.ceil(entity.map.prng.getRandomFloat() * neighbours.length)];
         if (entity.map.prng.getRandomBoolWithWeightPercentage(spreadChance)) {
             if (randomNeighbour !== undefined) {
                 randomNeighbour.burn();

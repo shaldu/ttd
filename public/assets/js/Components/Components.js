@@ -47,5 +47,6 @@ Burning.schema = {
     maxBurnTime: { type: Types.Number, default: 20 },
     burnDamage: { type: Types.Number, default: 5 },
     spreadChancePercantage: { type: Types.Number, default: 50 },
+    burnResistance: { type: Types.Number, default: 1 },
     entity: { type: Types.Ref }
 };

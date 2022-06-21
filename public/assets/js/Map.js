@@ -438,8 +438,8 @@ export default class Map {
 
     //change Tiles
     changeTileTexture(matrixId, textureOffset = null, textureOffset2 = null, opacity1 = null, opacity2 = null) {
-
-        if (textureOffset) {
+       
+        if (textureOffset != null) {
             let offSetId = textureOffset;
 
             let offsetX = offSetId.x * (this.tileWidth) / this.textureWidth;
@@ -447,7 +447,7 @@ export default class Map {
 
             this.meshLayerMain.setUniformAt('texOffset', matrixId, new THREE.Vector2(offsetX, offsetY));
         }
-        if (textureOffset2) {
+        if (textureOffset2 != null) {
             let offSetId = textureOffset2;
 
             let offsetX = offSetId.x * (this.tileWidth) / this.textureWidth;
@@ -455,10 +455,10 @@ export default class Map {
 
             this.meshLayerSecond.setUniformAt('texOffset', matrixId, new THREE.Vector2(offsetX, offsetY));
         }
-        if (opacity1) {
+        if (opacity1 != null) {
             this.meshLayerMain.setUniformAt('opacity', matrixId, opacity1);
         }
-        if (opacity2) {
+        if (opacity2 != null) {
             this.meshLayerSecond.setUniformAt('opacity', matrixId, opacity2);
         }
     }
