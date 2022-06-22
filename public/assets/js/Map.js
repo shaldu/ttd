@@ -6,7 +6,7 @@ import { InstancedUniformsMesh } from '/three-instanced-uniforms-mesh/dist/three
 import fragmentShader from './shaders/fragmentShader.glsl.js';
 import vertexShader from './shaders/vertexShader.glsl.js';
 
-import { GrassTile, TreeTile, WaterTile, SandTile } from './Tile.js';
+import { GrassTile, TreeTile, WaterTile, SandTile, MountainTile } from './Tile.js';
 
 export default class Map {
 
@@ -24,6 +24,7 @@ export default class Map {
         this.tileHeight = tileHeight;
         this.meshLayerMain;
         this.meshLayerSecond;
+        this.meshLayerThird;
         this.createTiles();
 
         for (let index = 0; index < 5; index++) {
@@ -48,6 +49,7 @@ export default class Map {
 
         this.createMapMainLayer();
         this.createMapSecondLayer();
+        this.createMapThirdLayer();
     }
 
     getTileFromTilePosition(x, y) {
@@ -64,19 +66,22 @@ export default class Map {
         for (let x = 0; x < sizeSqr; x++) {
             for (let y = 0; y < sizeSqr; y++) {
 
-                //let value2d = (Math.floor(this.simplex.noise2D(x * 0.022, y * 0.022) * 100)) / 20;
-                //let value2d2 = (Math.floor(this.simplex.noise2D(x * 0.0035, y * 0.0035) * 100)) / 10;
-                //let value2d3 = (Math.floor(this.simplex.noise2D(x * 0.0005, y * 0.0005) * 100)) / 70;
-                //let value2d4 = (Math.floor(this.simplex.noise2D(x * 0.09, y * 0.08) * 100)) / 20;
-
                 let value2d = (Math.floor(this.simplex.noise2D(x * 0.022, y * 0.022) * 100)) / 20;
+
+                let value2d1 = (Math.floor(this.simplex.noise2D(x * 0.01, y * 0.009) * 100)) / 21;
                 let value2d2 = (Math.floor(this.simplex.noise2D(x * 0.0035, y * 0.0035) * 100)) / 10;
                 let value2d3 = (Math.floor(this.simplex.noise2D(x * 0.0005, y * 0.0005) * 100)) / 70;
                 let value2d4 = (Math.floor(this.simplex.noise2D(x * 0.09, y * 0.08) * 100)) / 20;
 
-                let value = (value2d + value2d2 - ((value2d3 * value2d4) / 2)) / 3;
-                let waterlevel = 2.2;
-                let treeAmount = .1;
+                let treeVal1 = (Math.floor(this.simplex.noise2D(x * 0.002, y * 0.002) * 100)) / 70;
+                let treeVal2 = (Math.floor(this.simplex.noise2D(x * 0.018, y * 0.018) * 100)) / 30;
+                
+                let treeVal = (treeVal1 - treeVal2) / 2;
+
+                let value = (value2d + value2d1 + value2d2 - ((value2d3 * value2d4) / 2)) / 4;
+                let waterlevel = 2.22;
+                let treeAmount = -.2;
+                let mountainAmount = 0.6;
                 value = value + waterlevel;
 
                 let tile = new WaterTile(iterator, x, y, -1, this.world, this, { "x": 13, "y": 18 })
@@ -100,20 +105,26 @@ export default class Map {
                     tile = new GrassTile(iterator, x, y, 4, this.world, this, { "x": 27, "y": 9 })
                 }
 
-                value = (value - waterlevel) + treeAmount;
+                treeVal += treeAmount;
 
-                if (value > 2.5) {
+                if (treeVal > .5) {
                     tile = new TreeTile(iterator, x, y, 5, this.world, this, { "x": 29, "y": 12 })
                 }
-                if (value > 2.8) {
+                if (treeVal > .8) {
                     tile = new TreeTile(iterator, x, y, 6, this.world, this, { "x": 29, "y": 0 })
                 }
-                if (value > 3) {
+                if (treeVal > 1) {
                     tile = new TreeTile(iterator, x, y, 7, this.world, this, { "x": 30, "y": 12 })
                 }
 
+                value = value + mountainAmount;
+                if (value > 3.3) {
+                    tile = new MountainTile(iterator, x, y, 11, this.world, this, { "x": 0, "y": 10 })
+                }
+                11
+                let borderRadius = 5
                 //turn border tiles to water
-                if (x < 2 || y < 2 || x > sizeSqr - 3 || y > sizeSqr - 3) {
+                if (x < borderRadius || y < borderRadius || x > sizeSqr - borderRadius || y > sizeSqr - borderRadius) {
                     tile = new WaterTile(iterator, x, y, -1, this.world, this, { "x": 13, "y": 18 })
                 }
 
@@ -429,6 +440,55 @@ export default class Map {
         });
 
         this.scene.add(this.meshLayerSecond);
+    }
+
+    createMapThirdLayer() {
+        this.texture.minFilter = THREE.NearestFilter;
+        this.texture.magFilter = THREE.NearestFilter;
+
+        this.texture.wrapS = THREE.RepeatWrapping;
+        this.texture.wrapT = THREE.RepeatWrapping;
+
+        //create sprite sheet texture
+        this.texture.repeat.set(this.tileWidth / this.textureWidth, this.tileHeight / this.textureHeight);
+
+        this.texture.minFilter = THREE.NearestFilter;
+        this.texture.magFilter = THREE.NearestFilter;
+        const scale = 1;
+        const geometry = new THREE.PlaneBufferGeometry(scale, scale);
+        const material = new THREE.ShaderMaterial({
+            uniforms: {
+                texture1: { value: this.texture },
+                repeat: { value: new THREE.Vector2(this.tileWidth / this.textureWidth, this.tileHeight / this.textureHeight) },
+                texOffset: { value: new THREE.Vector2(0, 0) },
+                vPosition: { value: new THREE.Vector4(0, 0, -1, 0) },
+                opacity: { value: 0 },
+            },
+            vertexShader: vertexShader,
+            fragmentShader: fragmentShader,
+            transparent: true,
+        });
+
+
+        this.meshLayerThird = new InstancedUniformsMesh(geometry, material, this.size);
+
+        this.tiles.forEach(tile => {
+            if (tile) {
+                const x = tile.x
+                const y = tile.y;
+
+                let offSetId = tile.textureOffset2;
+
+                let offsetX = offSetId.x * (this.tileWidth) / this.textureWidth;
+                let offsetY = (1 - ((offSetId.y + 1) * (this.tileHeight) / this.textureHeight));
+
+                this.meshLayerThird.setUniformAt('opacity', tile.matrixId, 1);
+                this.meshLayerThird.setUniformAt('texOffset', tile.matrixId, new THREE.Vector2(offsetX, offsetY))
+                this.meshLayerThird.setUniformAt('vPosition', tile.matrixId, new THREE.Vector4(x + .5, y + .5, 0, 0))
+            }
+        });
+
+        this.scene.add(this.meshLayerThird);
     }
 
     changeTile(matrixId, newTile) {

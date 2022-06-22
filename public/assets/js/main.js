@@ -30,7 +30,7 @@ if (!socket.connected) {
 
 //init all variables
 let scene, camera, renderer, deltaTime, controls, clock, prng, stats, slowTimer = 0, mouseTileCords = new Vector2(0, 0), stopRender = false, selectedTile, selectedTileOld,
-    composer, world, map, seed = 6222;
+    composer, world, map, seed = 1002222;
 
 const postprocessingValues = {
     exposure: 1,

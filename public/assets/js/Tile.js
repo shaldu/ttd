@@ -133,6 +133,17 @@ export class SandTile extends Tile {
 }
 
 
+export class MountainTile extends Tile {
+    constructor(matrixId, x, y, typeId, world, map, textureOffset = { x: 30, y: 28 }, textureOffset2 = { x: 30, y: 28 }) {
+        super(matrixId, x, y, typeId, world, map, textureOffset, textureOffset2);
+
+        this.name = "Mountain";
+        this.description = "Big mountain";
+    }
+
+}
+
+
 
 export class AshTile extends Tile {
     constructor(matrixId, x, y, typeId, world, map, textureOffset = { x: 30, y: 28 }, textureOffset2 = { x: 30, y: 28 }) {

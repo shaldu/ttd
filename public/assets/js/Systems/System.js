@@ -139,7 +139,7 @@ export class BurningSystem extends System {
     }
 
     updateHealthValue(burning) {
-        let damage = Math.floor(Helpers.clamp((burning.burnDamage / (burning.burnResistance)),0, 99999));
+        let damage = Math.floor(Helpers.clamp((burning.burnDamage / (burning.burnResistance)),1, 99999));
         burning.entity.health = Helpers.clamp((burning.entity.health - damage),0 , burning.entity.maxHealth);
     }
 
