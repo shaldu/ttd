@@ -119,7 +119,7 @@ export default class Map {
 
                 value = value + mountainAmount;
                 if (value > 3.3) {
-                    tile = new MountainTile(iterator, x, y, 11, this.world, this, { "x": 0, "y": 10 })
+                    tile = new MountainTile(iterator, x, y, 11, this.world, this, { "x": 13, "y": 29 })
                 }
                 11
                 let borderRadius = 5

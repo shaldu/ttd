@@ -123,7 +123,7 @@ function initWorld() {
 
     let texture = new THREE.TextureLoader().load("/assets/sprites/tileset.png");
 
-    map = new Map(scene, world, 360000, texture, 310, 350, 10, 10, seed, prng);
+    map = new Map(scene, world, 640000, texture, 310, 350, 10, 10, seed, prng);
 
     world
         .registerSystem(MovableSystem)
